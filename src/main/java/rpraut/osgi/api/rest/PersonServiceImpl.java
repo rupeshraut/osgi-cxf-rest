@@ -6,6 +6,13 @@
 package rpraut.osgi.api.rest;
 
 import com.hazelcast.core.IMap;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+import rpraut.osgi.api.cache.CacheService;
+import rpraut.osgi.api.entity.Person;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,12 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ServiceScope;
-import rpraut.osgi.api.cache.CacheService;
-import rpraut.osgi.api.entity.Person;
 
 /**
  *

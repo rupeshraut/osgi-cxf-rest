@@ -11,15 +11,12 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.hazelcast.nio.serialization.ClassDefinition;
 import com.hazelcast.nio.serialization.ClassDefinitionBuilder;
+import org.osgi.service.component.annotations.*;
+import rpraut.osgi.api.entity.Person;
+
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Modified;
-import org.osgi.service.component.annotations.ServiceScope;
-import rpraut.osgi.api.entity.Person;
 
 /**
  *

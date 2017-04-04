@@ -9,10 +9,11 @@ import com.hazelcast.nio.serialization.Portable;
 import com.hazelcast.nio.serialization.PortableFactory;
 import com.hazelcast.nio.serialization.PortableReader;
 import com.hazelcast.nio.serialization.PortableWriter;
+
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -77,10 +78,8 @@ public class Person implements Portable {
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }
-        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        if (!(this.id != other.id && (this.id == null || !this.id.equals(other.id)))) return true;
+        else return false;
     }
 
     @Override
