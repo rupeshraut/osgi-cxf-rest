@@ -2,6 +2,7 @@ package rpraut.osgi.api.command;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
 import rpraut.osgi.api.rest.HelloService;
 
 /**

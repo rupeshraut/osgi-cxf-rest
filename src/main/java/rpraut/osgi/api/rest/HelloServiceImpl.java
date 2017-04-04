@@ -1,14 +1,15 @@
 package rpraut.osgi.api.rest;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ServiceScope;
-import rpraut.osgi.api.TestService;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+
+import rpraut.osgi.api.TestService;
 
 @Component(//
         name = "rpraut.osgi.api.rest.HelloService", //

@@ -5,12 +5,13 @@
  */
 package rpraut.osgi.api.rest.provider;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import org.osgi.service.component.annotations.Component;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import org.osgi.service.component.annotations.Component;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 /**
  *

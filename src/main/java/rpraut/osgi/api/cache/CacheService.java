@@ -7,12 +7,14 @@ package rpraut.osgi.api.cache;
 
 import com.hazelcast.core.IMap;
 
+import rpraut.osgi.api.entity.Person;
+
 /**
  *
  * @author rupesh
  */
-public interface CacheService<I,T> {
+public interface CacheService {
 
-    IMap<?,?> getMap(String mapName);
+    IMap<Integer, Person> getMap(String mapName);
     
 }

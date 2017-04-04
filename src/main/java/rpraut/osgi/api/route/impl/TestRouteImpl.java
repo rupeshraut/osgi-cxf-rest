@@ -6,6 +6,7 @@
 package rpraut.osgi.api.route.impl;
 
 import org.apache.camel.builder.RouteBuilder;
+
 import rpraut.osgi.api.route.TestRoute;
 
 /**

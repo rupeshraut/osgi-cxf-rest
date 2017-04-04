@@ -5,14 +5,6 @@
  */
 package rpraut.osgi.api.rest;
 
-import com.hazelcast.core.IMap;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ServiceScope;
-import rpraut.osgi.api.cache.CacheService;
-import rpraut.osgi.api.entity.Person;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,92 +13,172 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ServiceScope;
+
+import com.hazelcast.core.IMap;
+
+import rpraut.osgi.api.cache.CacheService;
+import rpraut.osgi.api.entity.Person;
+
+// TODO: Auto-generated Javadoc
 /**
+ * The Class PersonServiceImpl.
  *
  * @author rupesh
  */
 @Component(//
-        name = "rpraut.osgi.api.rest.PersonService", //
-        service = PersonService.class, //
-        scope = ServiceScope.PROTOTYPE,//
-        property = {//
-            "service.exported.interfaces=*",//
-            "service.exported.configs=org.apache.cxf.rs",//
-            "org.apache.cxf.rs.httpservice.context=/person",//
-            "service.exported.intents=jackson", //  
-            "cxf.bus.prop.skip.default.json.provider.registration=true"//
-        })
+		name = "rpraut.osgi.api.rest.PersonService", //
+		service = PersonService.class, //
+		scope = ServiceScope.PROTOTYPE, //
+		property = { //
+				"service.exported.interfaces=*", //
+				"service.exported.configs=org.apache.cxf.rs", //
+				"org.apache.cxf.rs.httpservice.context=/person", //
+				"service.exported.intents=jackson", //
+				"cxf.bus.prop.skip.default.json.provider.registration=true"//
+		})
 public class PersonServiceImpl implements PersonService {
 
-    private static final Logger LOG = Logger.getLogger(PersonServiceImpl.class.getName());
+	/** The Constant LOG. */
+	private static final Logger LOG = Logger.getLogger(PersonServiceImpl.class.getName());
 
-    final AtomicReference<Map<Integer, Person>> personRepo = new AtomicReference<Map<Integer, Person>>(new HashMap<Integer, Person>(1));
+	/** The person repo. */
+	final AtomicReference<Map> personRepo = new AtomicReference<Map>(new HashMap(1));
 
-    final AtomicInteger personId = new AtomicInteger(1);
+	/** The person id. */
+	final AtomicInteger personId = new AtomicInteger(1);
 
-    private CacheService cacheService;
+	/** The cache service. */
+	private CacheService cacheService;
 
-    private IMap<Integer, Person> personMap;
+	/** The person map. */
+	private IMap<Integer, Person> personMap;
 
-    public CacheService getCacheService() {
-        return cacheService;
-    }
+	/**
+	 * Gets the cache service.
+	 *
+	 * @return the cache service
+	 */
+	public CacheService getCacheService() {
+		return cacheService;
+	}
 
-    @Reference(service = CacheService.class, unbind = "unsetCacheService")
-    public void setCacheService(CacheService cacheService) {
-        this.cacheService = cacheService;
-    }
+	/**
+	 * Sets the cache service.
+	 *
+	 * @param cacheService
+	 *            the cache service
+	 */
+	@Reference(service = CacheService.class, unbind = "unsetCacheService")
+	public void setCacheService(CacheService cacheService) {
+		this.cacheService = cacheService;
+	}
 
-    public void unsetCacheService(CacheService cacheService) {
-        this.cacheService = cacheService;
-    }
+	/**
+	 * Unset cache service.
+	 *
+	 * @param cacheService
+	 *            the cache service
+	 */
+	public void unsetCacheService(CacheService cacheService) {
+		this.cacheService = cacheService;
+	}
 
-    @Activate
-    public void activate(Map<String, Object> config) {
-        modify(config);
-    }
+	/**
+	 * Activate.
+	 *
+	 * @param config
+	 *            the config
+	 */
+	@Activate
+	public void activate(Map<String, Object> config) {
+		modify(config);
+	}
 
-    @Activate
-    public void modify(Map<String, Object> config) {
-        personMap = getCacheService().getMap("PERSON_MAP");
-        LOG.log(Level.INFO,"retrived IMap instance for Person");
-    }
+	/**
+	 * Modify.
+	 *
+	 * @param config
+	 *            the config
+	 */
+	@Activate
+	public void modify(Map<String, Object> config) {
+		personMap = getCacheService().getMap("PERSON_MAP");
+		LOG.log(Level.INFO, "retrived IMap instance for Person");
+	}
 
-    public Person sayHello(Integer id) {
-//        if (personRepo.get().containsKey(id)) {
-//            return personRepo.get().get(id);
-//        }
+	/**
+	 * Gets the.
+	 *
+	 * @param id
+	 *            the id
+	 * @return the person
+	 * @see rpraut.osgi.api.rest.PersonService#sayHello(java.lang.Integer)
+	 */
+	@Override
+	public Person get(Integer id) {
+		if (personMap.containsKey(id)) {
+			return personMap.get(id);
+		}
+		return null;
+	}
 
-        if (personMap.containsKey(id)) {
-            return personMap.get(id);
-        }
+	/**
+	 * List.
+	 *
+	 * @return the collection
+	 * @see rpraut.osgi.api.rest.PersonService#list()
+	 */
+	@Override
+	public Collection<Person> list() {
+		return personMap.values();
+	}
 
-        return null;
-    }
+	/**
+	 * Save.
+	 *
+	 * @param person
+	 *            the person
+	 * @return the person
+	 * @see rpraut.osgi.api.rest.PersonService#save(rpraut.osgi.api.entity.Person)
+	 */
+	@Override
+	public Person save(Person person) {
+		if (person.getId() == null) {
+			person.setId(personId.getAndIncrement());
+		} // if
+		return personMap.get(person.getId());
+	}
 
-    public Collection<Person> list() {
-        return personMap.values();
-        //return personRepo.get().values();
-    }
+	/**
+	 * Update.
+	 *
+	 * @param person
+	 *            the person
+	 * @return the person
+	 * @see rpraut.osgi.api.rest.PersonService#update(rpraut.osgi.api.entity.Person)
+	 */
+	@Override
+	public Person update(Person person) {
+		personMap.put(person.getId(), person);
+		return get(person.getId());
+	}
 
-    public Person save(Person person) {
-        if (person.getId() == null) {
-            person.setId(personId.getAndIncrement());
-        }
-        //personRepo.get().put(person.getId(), person);
-        return personMap.put(person.getId(), person);
-        //return person;
-    }
+	/**
+	 * Delete.
+	 *
+	 * @param id
+	 *            the id
+	 * @return true, if successful
+	 * @see rpraut.osgi.api.rest.PersonService#delete(java.lang.Integer)
+	 */
+	@Override
+	public boolean delete(Integer id) {
+		return (personMap.remove(id) != null);
 
-    public Person update(Person person) {
-        personRepo.get().put(person.getId(), person);
-        return personMap.put(person.getId(), person);
-    }
-
-    public boolean delete(Integer id) {
-        //personRepo.get().remove(id);
-        personMap.remove(id);
-        return personMap.containsKey(id);
-    }
+	}
 
 }
