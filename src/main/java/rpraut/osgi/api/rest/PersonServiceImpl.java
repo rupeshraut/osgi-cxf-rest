@@ -45,9 +45,6 @@ public class PersonServiceImpl implements PersonService {
 	/** The Constant LOG. */
 	private static final Logger LOG = Logger.getLogger(PersonServiceImpl.class.getName());
 
-	/** The person repo. */
-	final AtomicReference<Map> personRepo = new AtomicReference<Map>(new HashMap(1));
-
 	/** The person id. */
 	final AtomicInteger personId = new AtomicInteger(1);
 
