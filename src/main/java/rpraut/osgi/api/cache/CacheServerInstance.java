@@ -17,6 +17,8 @@ import org.osgi.service.component.annotations.ServiceScope;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.MapConfig;
+import com.hazelcast.config.MapStoreConfig;
+import com.hazelcast.config.MapStoreConfig.InitialLoadMode;
 import com.hazelcast.config.SerializationConfig;
 import com.hazelcast.core.EntryEvent;
 import com.hazelcast.core.Hazelcast;
@@ -62,6 +64,16 @@ public class CacheServerInstance {
 		mapConfig.setAsyncBackupCount(1);
 		mapConfig.setName("PERSON_MAP");
 		serverConfig.addMapConfig(mapConfig);
+		
+		MapStoreConfig mapStoreConfig = new MapStoreConfig();
+		mapStoreConfig.setImplementation(new PersonMapStore());
+		mapStoreConfig.setWriteBatchSize(5);
+		mapStoreConfig.setWriteDelaySeconds(10);
+		mapStoreConfig.setEnabled(true);
+		mapStoreConfig.setInitialLoadMode(InitialLoadMode.LAZY);
+		mapStoreConfig.setWriteCoalescing(true);
+		mapConfig.setMapStoreConfig(mapStoreConfig);
+		
 		LOG.log(Level.INFO, "added PERSON_MAP config...");
 
 		hazelcastInstance = Hazelcast.newHazelcastInstance(serverConfig);
