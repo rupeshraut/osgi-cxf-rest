@@ -149,6 +149,7 @@ public class PersonServiceImpl implements PersonService {
 	public Person save(Person person) {
 		if (person.getId() == null) {
 			person.setId(personId.getAndIncrement());
+			personMap.put(person.getId(), person);
 		} // if
 		return personMap.get(person.getId());
 	}
@@ -163,7 +164,9 @@ public class PersonServiceImpl implements PersonService {
 	 */
 	@Override
 	public Person update(Person person) {
-		personMap.put(person.getId(), person);
+		if (personMap.containsKey(person.getId())) {
+			personMap.replace(person.getId(), person);
+		}//if
 		return get(person.getId());
 	}
 
