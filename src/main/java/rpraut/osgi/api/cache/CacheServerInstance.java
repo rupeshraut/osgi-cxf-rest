@@ -18,8 +18,14 @@ import org.osgi.service.component.annotations.ServiceScope;
 import com.hazelcast.config.Config;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.SerializationConfig;
+import com.hazelcast.core.EntryEvent;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.listener.EntryAddedListener;
+import com.hazelcast.map.listener.EntryEvictedListener;
+import com.hazelcast.map.listener.EntryMergedListener;
+import com.hazelcast.map.listener.EntryRemovedListener;
+import com.hazelcast.map.listener.EntryUpdatedListener;
 
 import rpraut.osgi.api.entity.Person;
 import rpraut.osgi.api.entity.PersonPortableFactory;
@@ -59,8 +65,48 @@ public class CacheServerInstance {
 		LOG.log(Level.INFO, "added PERSON_MAP config...");
 
 		hazelcastInstance = Hazelcast.newHazelcastInstance(serverConfig);
-
 		LOG.log(Level.INFO, "hazelcast instance created...");
+		
+		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryAddedListener<Integer, Person>() {
+
+			@Override
+			public void entryAdded(EntryEvent<Integer, Person> event) {
+				LOG.log(Level.INFO, "Entry added {0}", event.getKey());
+			}
+		}, true);
+
+		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryRemovedListener<Integer, Person>() {
+
+			@Override
+			public void entryRemoved(EntryEvent<Integer, Person> event) {
+				LOG.log(Level.INFO, "Entry removed {0}", event.getKey());
+			}
+		}, true);
+
+		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryUpdatedListener<Integer, Person>() {
+
+			@Override
+			public void entryUpdated(EntryEvent<Integer, Person> event) {
+				LOG.log(Level.INFO, "Entry updated {0}", event.getKey());
+			}
+		}, true);
+
+		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryEvictedListener<Integer, Person>() {
+
+			@Override
+			public void entryEvicted(EntryEvent<Integer, Person> event) {
+				LOG.log(Level.INFO, "Entry evicted {0}", event.getKey());
+			}
+		}, true);
+
+		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryMergedListener<Integer, Person>() {
+
+			@Override
+			public void entryMerged(EntryEvent<Integer, Person> event) {
+				LOG.log(Level.INFO, "Entry merged {0}", event.getKey());
+			}
+		}, true);
+
 	}
 
 	@Deactivate
