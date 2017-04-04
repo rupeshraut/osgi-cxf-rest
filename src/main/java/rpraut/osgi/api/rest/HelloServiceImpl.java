@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package rpraut.osgi.api.rest;
 
 import java.util.Date;
