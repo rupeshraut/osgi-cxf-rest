@@ -32,17 +32,25 @@ public class TestServiceImplTest {
 
     /**
      * Do test.
-     * @throws SQLException 
+     *
+     * @throws SQLException
      *
      * @throws Exception the exception
      */
-    @Test(expected = SQLException.class)
-    public void doTest() throws SQLException  {
+    public void doTest() throws SQLException {
         TestServiceImpl spyTestService = spy(testService);
-//        spyTestService.doTest(anyString());
-//        verify(spyTestService).doTest(anyString());
-//        verify(dataSource, atLeastOnce()).getConnection();
+        spyTestService.doTest(anyString());
+        verify(spyTestService).doTest(anyString());
+        verify(dataSource, atLeastOnce()).getConnection();
+    }
 
+    /**
+     * 
+     * @throws SQLException 
+     */
+    @Test(expected = SQLException.class)
+    public void doTestException() throws SQLException {
+        TestServiceImpl spyTestService = spy(testService);
         doThrow(SQLException.class).when(spyTestService).doTest(anyString());
         spyTestService.doTest(anyString());
     }

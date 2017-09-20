@@ -18,6 +18,7 @@ public class TestServiceImpl implements TestService {
      *
      * @param message
      */
+    @Override
     public void doTest(String message) {
         System.out.println("Hello " + message);
     }
