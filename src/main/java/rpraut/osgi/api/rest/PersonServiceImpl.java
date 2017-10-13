@@ -32,11 +32,11 @@ import rpraut.osgi.api.entity.Person;
 		service = PersonService.class, //
 		scope = ServiceScope.PROTOTYPE, //
 		property = { //
-				"service.exported.interfaces=*", //
-				"service.exported.configs=org.apache.cxf.rs", //
-				"org.apache.cxf.rs.httpservice.context=/person", //
+				"service.exported.interfaces=rpraut.osgi.api.rest.PersonService",//
+				"service.exported.configs=org.apache.cxf.rs",//
+				"org.apache.cxf.rs.address=/person", //
 				"service.exported.intents=jackson", //
-				"cxf.bus.prop.skip.default.json.provider.registration=true"//
+				"cxf.bus.prop.skip.default.json.provider.registration=false"//
 		})
 public class PersonServiceImpl implements PersonService {
 

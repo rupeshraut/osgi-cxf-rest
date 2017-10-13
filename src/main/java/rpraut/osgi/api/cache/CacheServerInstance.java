@@ -33,99 +33,68 @@ import rpraut.osgi.api.entity.Person;
 import rpraut.osgi.api.entity.PersonPortableFactory;
 
 /**
- *
  * @author rupesh
  */
 @Component(immediate = true, service = CacheServerInstance.class, scope = ServiceScope.SINGLETON)
 public class CacheServerInstance {
 
-	private static final Logger LOG = Logger.getLogger(CacheServerInstance.class.getName());
+    private static final Logger LOG = Logger.getLogger(CacheServerInstance.class.getName());
 
-	private HazelcastInstance hazelcastInstance;
+    private HazelcastInstance hazelcastInstance;
 
-	@Activate
-	public void activate(Map<String, Object> config) {
-		modify(config);
-	}
+    @Activate
+    public void activate(Map<String, Object> config) {
+        modify(config);
+    }
 
-	@Modified
-	public void modify(Map<String, Object> config) {
-		LOG.log(Level.INFO, "starting HezalcastInstance");
+    @Modified
+    public void modify(Map<String, Object> config) {
+        LOG.log(Level.INFO, "starting HezalcastInstance");
 
-		final Config serverConfig = new Config();
+        final Config serverConfig = new Config();
 
-		SerializationConfig serializationConfig = serverConfig.getSerializationConfig();
-		serializationConfig.addPortableFactory(Person.FACTORY_ID, new PersonPortableFactory());
-		serializationConfig.setPortableVersion(1);
+        SerializationConfig serializationConfig = serverConfig.getSerializationConfig();
+        serializationConfig.addPortableFactory(Person.FACTORY_ID, new PersonPortableFactory());
+        serializationConfig.setPortableVersion(1);
 
-		LOG.log(Level.INFO, "added serialization for Person entity...");
+        LOG.log(Level.INFO, "added serialization for Person entity...");
 
-		final MapConfig mapConfig = new MapConfig();
-		mapConfig.setAsyncBackupCount(1);
-		mapConfig.setName("PERSON_MAP");
-		serverConfig.addMapConfig(mapConfig);
-		
-		MapStoreConfig mapStoreConfig = new MapStoreConfig();
-		mapStoreConfig.setImplementation(new PersonMapStore());
-		mapStoreConfig.setWriteBatchSize(5);
-		mapStoreConfig.setWriteDelaySeconds(10);
-		mapStoreConfig.setEnabled(true);
-		mapStoreConfig.setInitialLoadMode(InitialLoadMode.LAZY);
-		mapStoreConfig.setWriteCoalescing(true);
-		mapConfig.setMapStoreConfig(mapStoreConfig);
-		
-		LOG.log(Level.INFO, "added PERSON_MAP config...");
+        final MapConfig mapConfig = new MapConfig();
+        mapConfig.setAsyncBackupCount(1);
+        mapConfig.setName("PERSON_MAP");
+        serverConfig.addMapConfig(mapConfig);
 
-		hazelcastInstance = Hazelcast.newHazelcastInstance(serverConfig);
-		LOG.log(Level.INFO, "hazelcast instance created...");
-		
-		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryAddedListener<Integer, Person>() {
+        MapStoreConfig mapStoreConfig = new MapStoreConfig();
+        mapStoreConfig.setImplementation(new PersonMapStore());
+        mapStoreConfig.setWriteBatchSize(5);
+        mapStoreConfig.setWriteDelaySeconds(10);
+        mapStoreConfig.setEnabled(true);
+        mapStoreConfig.setInitialLoadMode(InitialLoadMode.LAZY);
+        mapStoreConfig.setWriteCoalescing(true);
+        mapConfig.setMapStoreConfig(mapStoreConfig);
 
-			@Override
-			public void entryAdded(EntryEvent<Integer, Person> event) {
-				LOG.log(Level.INFO, "Entry added {0}", event.getKey());
-			}
-		}, true);
+        LOG.log(Level.INFO, "added PERSON_MAP config...");
 
-		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryRemovedListener<Integer, Person>() {
+        hazelcastInstance = Hazelcast.newHazelcastInstance(serverConfig);
+        LOG.log(Level.INFO, "hazelcast instance created...");
 
-			@Override
-			public void entryRemoved(EntryEvent<Integer, Person> event) {
-				LOG.log(Level.INFO, "Entry removed {0}", event.getKey());
-			}
-		}, true);
+        hazelcastInstance.getMap("PERSON_MAP").addEntryListener((EntryAddedListener<Integer, Person>) event -> LOG.log(Level.INFO, "Entry added {0}", event.getKey()), true);
 
-		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryUpdatedListener<Integer, Person>() {
+        hazelcastInstance.getMap("PERSON_MAP").addEntryListener((EntryRemovedListener<Integer, Person>) event -> LOG.log(Level.INFO, "Entry removed {0}", event.getKey()), true);
 
-			@Override
-			public void entryUpdated(EntryEvent<Integer, Person> event) {
-				LOG.log(Level.INFO, "Entry updated {0}", event.getKey());
-			}
-		}, true);
+        hazelcastInstance.getMap("PERSON_MAP").addEntryListener((EntryUpdatedListener<Integer, Person>) event -> LOG.log(Level.INFO, "Entry updated {0}", event.getKey()), true);
 
-		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryEvictedListener<Integer, Person>() {
+        hazelcastInstance.getMap("PERSON_MAP").addEntryListener((EntryEvictedListener<Integer, Person>) event -> LOG.log(Level.INFO, "Entry evicted {0}", event.getKey()), true);
 
-			@Override
-			public void entryEvicted(EntryEvent<Integer, Person> event) {
-				LOG.log(Level.INFO, "Entry evicted {0}", event.getKey());
-			}
-		}, true);
+        hazelcastInstance.getMap("PERSON_MAP").addEntryListener((EntryMergedListener<Integer, Person>) event -> LOG.log(Level.INFO, "Entry merged {0}", event.getKey()), true);
 
-		hazelcastInstance.getMap("PERSON_MAP").addEntryListener(new EntryMergedListener<Integer, Person>() {
+    }
 
-			@Override
-			public void entryMerged(EntryEvent<Integer, Person> event) {
-				LOG.log(Level.INFO, "Entry merged {0}", event.getKey());
-			}
-		}, true);
-
-	}
-
-	@Deactivate
-	public void deactivate(Map<String, Object> config) {
-		LOG.log(Level.INFO, "shutting down hazelcast instance ...");
-		hazelcastInstance.shutdown();
-		LOG.log(Level.INFO, "hazelcast instance shutdown complete...");
-	}
+    @Deactivate
+    public void deactivate(Map<String, Object> config) {
+        LOG.log(Level.INFO, "shutting down hazelcast instance ...");
+        hazelcastInstance.shutdown();
+        LOG.log(Level.INFO, "hazelcast instance shutdown complete...");
+    }
 
 }

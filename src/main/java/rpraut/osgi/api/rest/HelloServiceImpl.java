@@ -19,11 +19,11 @@ import rpraut.osgi.api.TestService;
         service = HelloService.class, //
         scope = ServiceScope.PROTOTYPE,//
         property = {//
-            "service.exported.interfaces=*",//
+            "service.exported.interfaces=rpraut.osgi.api.rest.HelloService",//
             "service.exported.configs=org.apache.cxf.rs",//
-            "org.apache.cxf.rs.httpservice.context=/rest",//
+            "org.apache.cxf.rs.address=/hello", //
             "service.exported.intents=jackson", //  
-            "cxf.bus.prop.skip.default.json.provider.registration=true"//
+            "cxf.bus.prop.skip.default.json.provider.registration=false"//
         })
 public class HelloServiceImpl implements HelloService {
 
