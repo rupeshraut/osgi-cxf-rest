@@ -5,29 +5,39 @@
  */
 package rpraut.osgi.api.rest;
 
-import java.util.Map;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 /**
  *
  * @author rupesh
  */
-@Path("/hello")
+@Api(tags = {"hello"})
+@Path("")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface HelloService {
 
+    @ApiOperation(value = "Say Hello", notes = "Returns a single task", response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "'String sayHello(name)' not found")
+    })
     @GET
     @Path("/{name}")
     String sayHello(@PathParam("name") String name);
-    
+
+    @ApiOperation(value = "Get current date", notes = "Returns a current date", response = Map.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "'Map<String, Object> getDate()' not found")
+    })
     @GET
     @Path("/today")        
     Map<String, Object> getDate();
 }
+//http://localhost:8181/cxf/tasks/api-docs?url=../swagger.json

@@ -42,13 +42,22 @@ public class CacheServerInstance {
 
     private HazelcastInstance hazelcastInstance;
 
+    /**
+     *
+     * @param config
+     */
     @Activate
     public void activate(Map<String, Object> config) {
         modify(config);
     }
 
+    /**
+     *
+     * @param config
+     */
     @Modified
     public void modify(Map<String, Object> config) {
+
         LOG.log(Level.INFO, "starting HezalcastInstance");
 
         final Config serverConfig = new Config();

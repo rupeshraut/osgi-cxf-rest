@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <osgi.version>6.0.0</osgi.version>
         <hazelcast.version>3.8</hazelcast.version>
-        <cxf.version>3.1.10</cxf.version>
+        <cxf.version>3.2.0</cxf.version>
     </properties>
 
     <dependencies>
@@ -57,6 +57,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-service-description-swagger</artifactId>
+            <version>${cxf.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-websocket</artifactId>
             <version>${cxf.version}</version>
             <scope>provided</scope>
@@ -82,12 +88,29 @@
             <artifactId>hazelcast-client</artifactId>
             <version>${hazelcast.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>spring-data-hazelcast</artifactId>
+            <version>1.1</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
             <version>1.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
+        <!--<dependency>-->
+            <!--<groupId>io.swagger</groupId>-->
+            <!--<artifactId>swagger-annotations</artifactId>-->
+            <!--<version>1.5.16</version>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/io.swagger/swagger-jaxrs &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>io.swagger</groupId>-->
+            <!--<artifactId>swagger-jaxrs</artifactId>-->
+            <!--<version>1.5.16</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

@@ -23,7 +23,8 @@ import rpraut.osgi.api.TestService;
             "service.exported.configs=org.apache.cxf.rs",//
             "org.apache.cxf.rs.address=/hello", //
             "service.exported.intents=jackson", //  
-            "cxf.bus.prop.skip.default.json.provider.registration=false"//
+            "cxf.bus.prop.skip.default.json.provider.registration=false",//
+            "org.apache.cxf.ws.features=org.apache.cxf.jaxrs.swagger.Swagger2Feature(basePath=/api-docs)"
         })
 public class HelloServiceImpl implements HelloService {
 
